@@ -28,8 +28,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function getUrlAttribute()
+    {
+        return route("questions.show", $this->id);
+    }
+
     public function Questions()
     {
-        return $this->hasMany(Question::class);
+        //return $this->hasMany(Question::class);
+        return '#';
     }
 }
