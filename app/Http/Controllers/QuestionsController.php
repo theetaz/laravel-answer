@@ -7,6 +7,11 @@ use App\Question;
 
 class QuestionsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -62,9 +67,12 @@ class QuestionsController extends Controller
      *
      * @param Question $question
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Question $question)
     {
+        $this->authorize('update', $question);
+
         return view('questions.edit', compact('question'));
     }
 
@@ -74,9 +82,12 @@ class QuestionsController extends Controller
      * @param AskQuestionRequest $request
      * @param Question $question
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(AskQuestionRequest $request, Question $question)
     {
+        $this->authorize('update', $question);
+
         $question->update($request->except('_token'));
 
         return redirect()->route('questions.index')->with('success', 'Your question has been updated');
@@ -91,6 +102,8 @@ class QuestionsController extends Controller
      */
     public function destroy(Question $question)
     {
+        $this->authorize('delete', $question);
+
         $question->delete();
 
         return redirect()->route('questions.index')->with('success', 'Your question has been deleted');
