@@ -33,12 +33,11 @@ class Question extends Model
     {
         if($this->answers_count > 0){
 
-            if($this->best_answer_id){
+            if($this->best_answe){
                 return "answer-accepted";
             }
             return "answered";
         }
-
         return "not-answered";
     }
 
@@ -50,5 +49,11 @@ class Question extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function acceptBestAnswer(Answer $answer)
+    {
+        $this->best_answer = $answer->id;
+        $this->save();
     }
 }
